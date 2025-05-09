@@ -37,6 +37,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'profiles',
+    'rest_framework',
+    'rest_framework_simplejwt',
+    'bookings',
+    'rest_framework_simplejwt.token_blacklist',
+    'django_filters',
+    'marketplace',
 ]
 
 MIDDLEWARE = [
@@ -120,3 +127,25 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = 'profiles.User'
+
+AUTHENTICATION_BACKENDS = [
+    'profile.authentication.EmailOrPhoneBackend',  # Custom backend
+    'django.contrib.auth.backends.ModelBackend',  # Fallback
+]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    
+     'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.SearchFilter',
+        'rest_framework.filters.OrderingFilter',
+    ]
+}
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
