@@ -5,7 +5,8 @@ from .views import (
     ProfessionalBookingsView,
     BookingDetailView,
     UpdateBookingStatusView,
-    ProfessionalDashboardView, CustomerDashboardView
+    ProfessionalDashboardView, CustomerDashboardView,
+    create_booking_view
 )
 
 urlpatterns = [
@@ -15,5 +16,6 @@ urlpatterns = [
     path('<int:pk>/update-status/', UpdateBookingStatusView.as_view(), name='update-booking-status'), 
     path('dashboard/', ProfessionalDashboardView.as_view(), name='professional-dashboard'),
     path('customer/dashboard/', CustomerDashboardView.as_view(), name='customer-dashboard'),
+    path('book/<int:professional_id>/', create_booking_view, name='create_booking'),
 
 ]

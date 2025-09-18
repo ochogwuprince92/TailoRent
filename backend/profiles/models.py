@@ -25,6 +25,23 @@ class UserManager(BaseUserManager):
         user.set_password(password)
         user.save(using=self._db)
         return user
+    
+    def get_full_name(self):
+        """Returns the user's full name if available, otherwise email/phone"""
+        name = f"{self.first_name or ''} {self.last_name or ''}".strip()
+        return name or self.email or self.phone_number
+
+    def get_role_display_color(self):
+        """Returns Tailwind color class based on role"""
+        color_map = {
+            'Fashion_Designer': 'purple',
+            'Tailor': 'blue', 
+            'Vendor': 'green',
+            'Customer': 'gray',
+            'Admin': 'red'
+        }
+        return color_map.get(self.role, 'gray')
+
 
     def create_superuser(self, email=None, password = None, phone_number=None, **extra_fields):
         """
@@ -50,7 +67,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(max_length=30, blank=True, null=True)
     email = models.EmailField(unique=True, null=True, blank=True) #Email field (Unique)
     phone_number = models.CharField(max_length=11, unique=True, null=True, blank=True) # Phone number field is unique
-    location = models.CharField(max_length=100, blank=True, null=True)
+    address = models.CharField(max_length=100, blank=True, null=True)
     role = models.CharField(max_length=20, choices=ROLE_CHOICES) #Role field (choices are Customer, Tailor, Fashion Designer, Vendor)
     is_active = models.BooleanField(default=True) # To show if user is active
     is_staff = models.BooleanField(default=False) #To show if user is a staff

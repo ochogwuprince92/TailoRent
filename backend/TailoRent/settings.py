@@ -28,6 +28,8 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+AUTH_USER_MODEL = 'profiles.User'
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -57,14 +59,17 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'TailoRent.urls'
+import os
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'TailoRent', 'templates')],
+
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
@@ -128,10 +133,9 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'profiles.User'
 
 AUTHENTICATION_BACKENDS = [
-    'profile.authentication.EmailOrPhoneBackend',  # Custom backend
+    'profiles.authentication.EmailOrPhoneBackend',  # Custom backend
     'django.contrib.auth.backends.ModelBackend',  # Fallback
 ]
 
@@ -149,3 +153,16 @@ REST_FRAMEWORK = {
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+LOGIN_URL = '/api/profiles/login/'
+LOGIN_REDIRECT_URL = '/api/profiles/dashboard/'
+
+# import os
+# STATIC_URL = '/static/'
+# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'TailoRent', 'static'),
+]

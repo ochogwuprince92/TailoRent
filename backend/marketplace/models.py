@@ -33,3 +33,12 @@ class StyleFeed(models.Model):
 
     def __str__(self):
         return f"Style post by {self.user.email} at {self.created_at}"
+
+class NewsfeedPost(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    image = models.ImageField(upload_to='newsfeed/', blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.user.get_full_name()}: {self.content[:30]}"

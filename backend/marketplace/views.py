@@ -1,5 +1,6 @@
 from rest_framework import generics, permissions, filters
-from .models import Product, Service,  StyleFeed
+from .models import Product, Service,  StyleFeed, NewsfeedPost
+from django.shortcuts import render
 from .serializers import ProductSerializer, ServiceSerializer, StyleFeedSerializer
 from django.core.exceptions import PermissionDenied
 from django_filters.rest_framework import DjangoFilterBackend
@@ -78,3 +79,7 @@ class StyleFeedDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return StyleFeed.objects.all().order_by('-created_at')
+    
+def newsfeed_view(request):
+    posts = NewsfeedPost.objects.all().order_by('-created_at')
+    return render(request, 'newsfeed.html', {'posts': posts})

@@ -4,6 +4,10 @@ from .serializers import BookingSerializer, BookingStatusUpdateSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, get_object_or_404, redirect
+from .forms import BookingForm
+from profiles.models import User
 
 class BookingListCreateView(generics.ListCreateAPIView):
     """
@@ -100,3 +104,23 @@ class CustomerDashboardView(APIView):
             "accepted": accepted,
             "rejected": rejected,
         })
+    
+@login_required
+def create_booking_view(request, professional_id):
+    professional = get_object_or_404(User, id=professional_id, role__in=["Tailor", "Fashion_Designer"])
+    
+    if request.method == 'POST':
+        form = BookingForm(request.POST)
+        if form.is_valid():
+            booking = form.save(commit=False)
+            booking.customer = request.user
+            booking.professional = professional
+            booking.save()
+            return redirect('dashboard')
+    else:
+        form = BookingForm()
+    
+    return render(request, 'create_booking.html', {
+        'form': form,
+        'professional': professional,
+    })

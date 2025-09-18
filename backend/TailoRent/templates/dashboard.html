@@ -1,0 +1,210 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Sidebar Toggle Button -->
+<button id="sidebarToggle" class="m-2 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none">
+  ☰ Menu
+</button>
+
+<div class="grid grid-cols-12 gap-3 py-0 px-2 min-h-screen">
+  <!-- Sidebar Container -->
+  <div id="sidebar" class="col-span-2 transition-all duration-300 ease-in-out h-full">
+    <aside class="bg-white rounded-2xl shadow-lg p-5 space-y-10 text-sm text-gray-700 overflow-hidden h-full flex flex-col">
+      <!-- Profile Section -->
+      <div class="text-center mb-14 sidebar-content">
+        <div class="text-xl font-bold text-gray-800 mb-2">👤Profile</div>
+        <p class="text-base font-medium">{{ user.first_name }} {{ user.last_name }}</p>
+        <p class="text-sm text-gray-500 mb-1 capitalize">{{ user.role }}</p>
+        <a href="{% url 'profile_update' %}" class="inline-block mt-2 px-2 py-2 bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-full hover:from-blue-700 hover:to-blue-900 font-semibold transition">Update Profile</a>
+      </div>
+
+
+      <!-- Quick Actions -->
+      <div class="sidebar-content">
+        <div class="font-semibold text-gray-700 mb-2">⚡ Quick Actions</div>
+        <ul class="space-y-3">
+          <li><a href="#" class="block text-blue-600 hover:underline">➕ Create Listing</a></li>
+          <li><a href="#" class="block text-blue-600 hover:underline">📅 Book a Service</a></li>
+        </ul>
+      </div>
+
+      <!-- Professionals Section -->
+      <div class="sidebar-content">
+        <h3 class="text-lg font-semibold mb-2">Recommended Professionals</h3>
+        <div class="grid grid-cols-1 gap-4">
+          {% if professionals and professionals|length > 0 %}
+            {% for professional in professionals %}
+            <a href="{% if professional.id %}{% url 'professional_detail' pk=professional.id %}{% else %}#{% endif %}" 
+               class="block px-2 py-1 min-w-[200px] border rounded shadow-sm hover:shadow-lg transition duration-200 ease-in-out bg-white w-full">
+              <div class="flex items-center gap-3">
+                {% if professional.profile_picture %}
+                  <img src="{{ professional.profile_picture.url }}" 
+                       alt="{% if professional.get_full_name %}{{ professional.get_full_name }}{% else %}Professional{% endif %}"
+                       class="w-10 h-10 rounded-full object-cover border-2 border-white shadow">
+                {% else %}
+                  <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
+                    <span class="text-gray-700 font-medium text-sm">
+                      {% if professional.first_name %}{{ professional.first_name|first }}{% else %}P{% endif %}
+                      {% if professional.last_name %}{{ professional.last_name|first }}{% endif %}
+                    </span>
+                  </div>
+                {% endif %}
+                <div>
+                  <h4 class="text-md font-semibold">{% if professional.get_full_name %}{{ professional.get_full_name }}{% else %}Professional{% endif %}</h4>
+                  <p class="text-sm text-gray-600 capitalize">{% if professional.role %}{{ professional.role }}{% else %}service provider{% endif %}</p>
+                  {% if professional.about_me %}
+                    <p class="text-xs text-gray-500 mt-1 truncate">{{ professional.about_me|truncatechars:40 }}</p>
+                  {% endif %}
+                </div>
+              </div>
+            </a>
+            {% endfor %}
+          {% else %}
+            <p class="text-gray-500 text-sm p-3 bg-gray-50 rounded-lg">No professionals available</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Icons only view -->
+      <div id="iconsOnlyView" class="hidden flex flex-col items-center space-y-6 py-4">
+        <a href="#" class="text-2xl" title="Profile">👤</a>
+        <a href="#" class="text-2xl" title="Create Listing">➕</a>
+        <a href="#" class="text-2xl" title="Book Service">📅</a>
+        <a href="{% url 'profile_update' %}" class="text-2xl" title="Update Profile">⚙️</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Main Content -->
+  <div id="mainContent" class="col-span-10 transition-all duration-300 ease-in-out h-full">
+    <main class="space-y-4 h-full">
+      <!-- Welcome Banner -->
+      <div class="bg-gradient-to-r from-blue-500 to-blue-500 text-white rounded-xl p-3 shadow-lg mb-2">
+        <h1 class="text-2xl text-center font-bold">Welcome, {% if user.first_name %}{{ user.first_name }}{% else %}User{% endif %}!</h1>
+      </div>
+
+      <!-- Newsfeed -->
+      <div class="bg-white p-4 rounded-2xl shadow-xl min-h-[350px] max-h-[500px] overflow-y-auto">
+        <h2 class="text-2xl font-bold mb-4 text-blue-800">📰 Feeds</h2>
+        <div class="space-y-4">
+          {% if newsfeed_posts and newsfeed_posts|length > 0 %}
+            {% for post in newsfeed_posts %}
+            <div class="bg-white p-4 rounded-xl border border-blue-100 hover:bg-blue-50 transition-colors">
+              <p class="text-gray-800">{% if post.content %}{{ post.content }}{% else %}No content available{% endif %}</p>
+              <p class="text-xs text-blue-500 mt-2">{% if post.created_at %}{{ post.created_at|date:"M d, Y H:i" }}{% else %}Date not available{% endif %}</p>
+              {% if post.image %}
+                <img src="{{ post.image.url }}" class="mt-2 rounded-lg max-h-40 w-auto" alt="Post image">
+              {% endif %}
+            </div>
+            {% endfor %}
+          {% else %}
+            <p class="text-gray-500 p-4 text-center bg-gray-50 rounded-lg">No updates available</p>
+          {% endif %}
+        </div>
+      </div>
+
+<!-- Compact Royal Blue CTA Button -->
+<div class="bg-gradient-to-r from-blue-500 to-blue-500 text-white rounded-xl p-3 shadow-lg text-center hover:from-blue-700 hover:to-blue-900 transition mb-4">
+  <h2 class="text-lg font-bold">Need a Tailor or Fashion Designer?</h2>
+  <p class="text-xs mt-1 mb-2">Find skilled professionals for your style needs</p>
+  <a href="{% url 'professional_list' %}" class="inline-block bg-white text-blue-700 px-3 py-1 rounded-full text-sm font-semibold hover:bg-gray-100 transition">Hire Now</a>
+</div>
+
+      <!-- Stats Cards -->
+      <div class="grid grid-cols-3  gap-8">
+        <!-- Listings -->
+        <div class="bg-white rounded-xl shadow p-4 text-center border-t-4 border-blue-600">
+          <h3 class="text-lg font-bold flex items-center justify-center gap-2">
+            <span>📦</span> Listings
+          </h3>
+          <p class="text-2xl text-blue-600 mt-2">{% if highlights.total_listings %}{{ highlights.total_listings }}{% else %}0{% endif %}</p>
+        </div>
+        
+        <!-- Bookings -->
+        <div class="bg-white rounded-xl shadow p-4 text-center border-t-4 border-green-600">
+          <h3 class="text-lg font-bold flex items-center justify-center gap-2">
+            <span>📅</span> Bookings
+          </h3>
+          <p class="text-2xl text-green-600 mt-2">{% if highlights.total_bookings %}{{ highlights.total_bookings }}{% else %}0{% endif %}</p>
+        </div>
+        
+        <!-- Transactions -->
+        <div class="bg-white rounded-xl shadow p-4 text-center border-t-4 border-purple-600">
+          <h3 class="text-lg font-bold flex items-center justify-center gap-2">
+            <span>💰</span> Transactions
+          </h3>
+          <div class="mt-2">
+            <p class="text-sm text-gray-500">Recent bookings:</p>
+            <ul class="text-xs space-y-1 mt-2">
+              {% if orders and orders|length > 0 %}
+                {% for order in orders|slice:":3" %}
+                <li class="truncate">#{% if order.id %}{{ order.id }}{% else %}?{% endif %} - {% if order.date %}{{ order.date|date:"M d" }}{% else %}No date{% endif %}</li>
+                {% endfor %}
+              {% else %}
+                <li class="text-gray-400 py-1">No recent transactions</li>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+      </div>
+
+  <div class="mt-12"></div>
+
+      <!-- Footer Moved Down -->
+      <div class="text-center text-sm text-gray-600 mt-12 mb-8 space-x-4">
+        <a href="{% url 'about' %}" class="hover:underline hover:text-blue-600">About</a>
+        <a href="mailto:contact@tailorent.com" class="hover:underline hover:text-blue-600">Contact</a>
+        <a href="{% url 'logout' %}" class="hover:underline hover:text-blue-600">Logout</a>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- JavaScript remains the same -->
+<script>
+  const sidebar = document.getElementById('sidebar');
+  const mainContent = document.getElementById('mainContent');
+  const toggleBtn = document.getElementById('sidebarToggle');
+  const sidebarContents = document.querySelectorAll('.sidebar-content');
+  const iconsOnlyView = document.getElementById('iconsOnlyView');
+
+  toggleBtn.addEventListener('click', () => {
+    sidebar.classList.toggle('collapsed');
+    
+    if (sidebar.classList.contains('collapsed')) {
+      // Collapsed state
+      sidebarContents.forEach(el => el.classList.add('hidden'));
+      iconsOnlyView.classList.remove('hidden');
+      sidebar.classList.remove('col-span-2');
+      sidebar.classList.add('col-span-1');
+      mainContent.classList.remove('col-span-10');
+      mainContent.classList.add('col-span-11');
+    } else {
+      // Expanded state
+      sidebarContents.forEach(el => el.classList.remove('hidden'));
+      iconsOnlyView.classList.add('hidden');
+      sidebar.classList.remove('col-span-1');
+      sidebar.classList.add('col-span-2');
+      mainContent.classList.remove('col-span-11');
+      mainContent.classList.add('col-span-10');
+    }
+  });
+</script>
+
+<style>
+  .collapsed {
+    width: 4rem;
+  }
+  .collapsed aside {
+    padding: 0.5rem;
+    align-items: center;
+  }
+  #iconsOnlyView a {
+    transition: transform 0.2s;
+  }
+  #iconsOnlyView a:hover {
+    transform: scale(1.2);
+  }
+</style>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="max-w-xl mx-auto p-6 bg-white shadow rounded">
+  <h2 class="text-xl font-bold mb-4">Book {{ professional.first_name }} {{ professional.last_name }}</h2>
+
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+      Confirm Booking
+    </button>
+  </form>
+
+  <div class="mt-4">
+    <a href="{% url 'professional_detail' professional.pk %}" class="text-blue-600 hover:underline">&larr; Back to Profile</a>
+  </div>
+</div>
+{% endblock %}

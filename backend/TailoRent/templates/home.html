@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5 text-center">
+  <h1>Welcome to TailoRent</h1>
+  <p>Do you need a Tailor/Fashion Designer or want to buy/sell.</p>
+  <a href="{% url 'login' %}" class="btn btn-primary mt-3">Log In</a>
+  <a href="{% url 'signup' %}" class="btn btn-outline-secondary mt-3">Sign Up</a>
+</div>
+{% endblock %}
