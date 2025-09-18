@@ -1,0 +1,50 @@
+# Core Django
+Django==5.2
+djangorestframework==3.15.2
+django-cors-headers==4.3.1
+django-filter==23.5
+
+# Authentication
+djangorestframework-simplejwt==5.3.0
+
+# Database
+mysqlclient==2.2.0
+
+# Environment
+python-decouple==3.8
+
+# Utilities
+Pillow==10.2.0
+python-dateutil==2.8.2
+
+# Celery for background tasks
+celery==5.3.4
+redis==5.0.1
+
+# Cloudinary for image handling
+cloudinary==1.41.0
+
+# Email and OTP
+django-otp==1.2.0
+django-otp-yubikey==1.2.0
+twilio==8.10.0
+django-anymail==10.2
+
+# API Documentation
+drf-spectacular==0.27.0
+
+# Testing
+pytest==7.4.4
+pytest-django==4.7.0
+pytest-cov==4.1.0
+factory-boy==3.3.0
+
+# Code Quality
+black==23.12.1
+flake8==7.0.0
+isort==5.13.2
+mypy==1.8.0
+
+# Security
+django-ratelimit==4.1.0
+django-csp==3.7
