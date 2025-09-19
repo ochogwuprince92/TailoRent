@@ -5,17 +5,20 @@ Base settings for TailoRent project.
 import os
 from pathlib import Path
 from django.core.exceptions import ImproperlyConfigured
+from dotenv import load_dotenv
+
+# Load environment variables from .env
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+load_dotenv(BASE_DIR / ".env")
 
 
 def get_env_variable(var_name, default=None):
     """Get environment variable or return default value."""
-    try:
-        return os.environ[var_name]
-    except KeyError:
-        if default is not None:
-            return default
-        error_msg = f"Set the {var_name} environment variable"
-        raise ImproperlyConfigured(error_msg)
+    value = os.getenv(var_name, default)
+    if value is None:
+        raise ImproperlyConfigured(f"Set the {var_name} environment variable")
+    return value
+
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
